@@ -4,6 +4,10 @@ import '../../../../widgets/common_widgets.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../providers/dashboard_provider.dart';
+import '../../../dosen/presentations/page/dosen_page.dart';
+import '../../../mahasiswa/presentations/page/mahasiswa_page.dart';
+import '../../../mahasiswaAktif/presentations/page/mahasiswa_aktif_page.dart';
+import '../../../profile/presentations/page/profile_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -22,13 +26,57 @@ class _DashboardPageState extends State<DashboardPage> {
     });
   }
 
+  Widget _buildMenuCard({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    required List<Color> gradientColors,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: gradientColors,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: gradientColors[0].withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 40,
+              color: Colors.white,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        elevation: 0,
-      ),
       body: Consumer<DashboardProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading && provider.dashboardData == null) {
@@ -54,61 +102,61 @@ class _DashboardPageState extends State<DashboardPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(AppConstants.paddingLarge),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryColor,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppTheme.primaryColor,
+                      AppTheme.primaryColor.withOpacity(0.8),
+                    ],
+                  ),
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
                   ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Selamat Datang,',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 14,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: AppConstants.paddingSmall,
-                            ),
-                            Text(
-                              data.userName,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: const BoxDecoration(
-                            color: Colors.white24,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.person,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: AppConstants.paddingMedium),
-                    const Text(
-                      'Data Mahasiswa D4TI',
-                      style: TextStyle(
+                    Text(
+                      'Selamat Datang! 👋',
+                      style: const TextStyle(
                         color: Colors.white70,
-                        fontSize: 12,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: AppConstants.paddingSmall),
+                    Text(
+                      data.userName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: AppConstants.paddingLarge),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.calendar_today,
+                            color: Colors.white,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Update: 6 Mar 2026, 2:02',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -121,31 +169,80 @@ class _DashboardPageState extends State<DashboardPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Statistik',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: AppConstants.paddingMedium),
+                      // Menu Section - Statistik diubah menjadi Menu Buttons
                       GridView.count(
                         crossAxisCount: 2,
                         crossAxisSpacing: AppConstants.paddingMedium,
                         mainAxisSpacing: AppConstants.paddingMedium,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        children: data.stats
-                            .map(
-                              (stat) => StatCard(
-                                title: stat.title,
-                                value: stat.value,
-                                subtitle: stat.subtitle,
-                                percentage: stat.percentage,
-                                isIncrease: stat.isIncrease,
-                              ),
-                            )
-                            .toList(),
+                        childAspectRatio: 1.2,
+                        children: [
+                          _buildMenuCard(
+                            icon: Icons.people,
+                            label: 'Data Dosen',
+                            gradientColors: [
+                              const Color(0xFF667EEA),
+                              const Color(0xFF764BA2),
+                            ],
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const DosenPage(),
+                                ),
+                              );
+                            },
+                          ),
+                          _buildMenuCard(
+                            icon: Icons.school,
+                            label: 'Data Mahasiswa',
+                            gradientColors: [
+                              const Color(0xFFF093FB),
+                              const Color(0xFFF5576C),
+                            ],
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MahasiswaPage(),
+                                ),
+                              );
+                            },
+                          ),
+                          _buildMenuCard(
+                            icon: Icons.assignment_turned_in,
+                            label: 'Mahasiswa Aktif',
+                            gradientColors: [
+                              const Color(0xFF4FACFE),
+                              const Color(0xFF00F2FE),
+                            ],
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MahasiswaAktifPage(),
+                                ),
+                              );
+                            },
+                          ),
+                          _buildMenuCard(
+                            icon: Icons.person,
+                            label: 'Profile',
+                            gradientColors: [
+                              const Color(0xFF43E97B),
+                              const Color(0xFF38F9D7),
+                            ],
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ProfilePage(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -154,19 +251,6 @@ class _DashboardPageState extends State<DashboardPage> {
             ],
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Provider.of<DashboardProvider>(context, listen: false)
-              .refresh();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Memperbarui data...'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-        },
-        child: const Icon(Icons.refresh),
       ),
     );
   }
