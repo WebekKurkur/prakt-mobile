@@ -30,7 +30,7 @@ class DosenProvider extends ChangeNotifier {
     }
   }
 
-  Future<DosenModel?> getDosenById(String id) async {
+  Future<DosenModel?> getDosenById(int id) async {
     try {
       return await _repository.getDosenById(id);
     } catch (e) {

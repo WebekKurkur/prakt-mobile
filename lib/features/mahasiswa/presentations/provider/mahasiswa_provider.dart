@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import '../../models/mahasiswa_model.dart';
 import '../../repositories/mahasiswa_repository.dart';
-
+ 
 class MahasiswaProvider extends ChangeNotifier {
   final MahasiswaRepository _repository;
-  
+ 
   List<MahasiswaModel> _mahasiswaList = [];
   bool _isLoading = false;
   String? _error;
-
+ 
   MahasiswaProvider(this._repository);
-
+ 
   List<MahasiswaModel> get mahasiswaList => _mahasiswaList;
   bool get isLoading => _isLoading;
   String? get error => _error;
-
+ 
   Future<void> fetchAllMahasiswa() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
-
+ 
     try {
       _mahasiswaList = await _repository.getAllMahasiswa();
     } catch (e) {
@@ -29,8 +29,8 @@ class MahasiswaProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  Future<MahasiswaModel?> getMahasiswaById(String id) async {
+ 
+  Future<MahasiswaModel?> getMahasiswaById(int id) async {
     try {
       return await _repository.getMahasiswaById(id);
     } catch (e) {

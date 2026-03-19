@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/mahasiswa_aktif_provider.dart';
 import '../widget/mahasiswa_aktif_card_widget.dart';
-
+ 
 class MahasiswaAktifPage extends StatefulWidget {
   const MahasiswaAktifPage({Key? key}) : super(key: key);
-
+ 
   @override
   State<MahasiswaAktifPage> createState() => _MahasiswaAktifPageState();
 }
-
+ 
 class _MahasiswaAktifPageState extends State<MahasiswaAktifPage> {
   @override
   void initState() {
@@ -18,7 +18,7 @@ class _MahasiswaAktifPageState extends State<MahasiswaAktifPage> {
       context.read<MahasiswaAktifProvider>().fetchAllMahasiswaAktif();
     });
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +28,7 @@ class _MahasiswaAktifPageState extends State<MahasiswaAktifPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Mahasiswa Aktif',
+          'Data Mahasiswa Aktif',
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -53,7 +53,7 @@ class _MahasiswaAktifPageState extends State<MahasiswaAktifPage> {
               child: CircularProgressIndicator(),
             );
           }
-
+ 
           if (provider.error != null) {
             return Center(
               child: Column(
@@ -80,34 +80,34 @@ class _MahasiswaAktifPageState extends State<MahasiswaAktifPage> {
               ),
             );
           }
-
+ 
           if (provider.mahasiswaAktifList.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.people_outline,
+                  const Icon(
+                    Icons.note_outlined,
                     color: Colors.grey,
                     size: 48,
                   ),
-                  SizedBox(height: 16),
-                  Text('Tidak ada data mahasiswa aktif'),
+                  const SizedBox(height: 16),
+                  const Text('Tidak ada data mahasiswa aktif'),
                 ],
               ),
             );
           }
-
+ 
           return ListView.builder(
             itemCount: provider.mahasiswaAktifList.length,
             itemBuilder: (context, index) {
-              final mahasiswa = provider.mahasiswaAktifList[index];
+              final mahasiswaAktif = provider.mahasiswaAktifList[index];
               return MahasiswaAktifCardWidget(
-                mahasiswa: mahasiswa,
+                mahasiswaAktif: mahasiswaAktif,
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('${mahasiswa.name} dipilih'),
+                      content: Text('${mahasiswaAktif.title} dipilih'),
                       duration: const Duration(seconds: 2),
                     ),
                   );

@@ -1,48 +1,41 @@
+import 'package:dio/dio.dart';
 import '../models/dosen_model.dart';
-
+ 
 class DosenRepository {
+  final Dio _dio = Dio();
   
-  final List<DosenModel> _dosenList = [
-    DosenModel(
-      id: '1',
-      name: 'Anang Prasetyo',
-      nip: '123456789',
-      email: 'anang.prasetyo@example.com',
-      department: 'Teknik Informatika',
-      initials: 'A',
-      colorIndex: 0, // Purple
-    ),
-    DosenModel(
-      id: '2',
-      name: 'Rachman Sinatriya',
-      nip: '987654321',
-      email: 'rachman.sinatriya@example.com',
-      department: 'Teknik Informatika',
-      initials: 'R',
-      colorIndex: 1, // Pink
-    ),
-    DosenModel(
-      id: '3',
-      name: 'Alfian Sukma',
-      nip: '456789123',
-      email: 'alfian.sukma@example.com',
-      department: 'Teknik Informatika',
-      initials: 'A',
-      colorIndex: 2, // Cyan
-    ),
-  ];
-
   Future<List<DosenModel>> getAllDosen() async {
-    // Simulasi API call
-    await Future.delayed(const Duration(milliseconds: 500));
-    return _dosenList;
-  }
-
-  Future<DosenModel?> getDosenById(String id) async {
-    await Future.delayed(const Duration(milliseconds: 300));
     try {
-      return _dosenList.firstWhere((dosen) => dosen.id == id);
+      final response = await _dio.get(
+        'https://jsonplaceholder.typicode.com/users',
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
+ 
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        print('Data dosen: ${data.length} items');
+        return data.map((json) => DosenModel.fromJson(json)).toList();
+      } else {
+        throw Exception('Error: ${response.statusCode}');
+      }
     } catch (e) {
+      print('Exception: $e');
+      rethrow;
+    }
+  }
+ 
+  Future<DosenModel?> getDosenById(int id) async {
+    try {
+      final response = await _dio.get(
+        'https://jsonplaceholder.typicode.com/users/$id',
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
+      if (response.statusCode == 200) {
+        return DosenModel.fromJson(response.data);
+      }
+      return null;
+    } catch (e) {
+      print('Error: $e');
       return null;
     }
   }

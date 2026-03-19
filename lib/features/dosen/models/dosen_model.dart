@@ -1,43 +1,67 @@
+class AddressModel {
+  final String street;
+  final String suite;
+  final String city;
+  final String zipcode;
+ 
+  AddressModel({
+    required this.street,
+    required this.suite,
+    required this.city,
+    required this.zipcode,
+  });
+ 
+  factory AddressModel.fromJson(Map<String, dynamic> json) {
+    return AddressModel(
+      street: json['street'] ?? '',
+      suite: json['suite'] ?? '',
+      city: json['city'] ?? '',
+      zipcode: json['zipcode'] ?? '',
+    );
+  }
+ 
+  Map<String, dynamic> toJson() {
+    return {
+      'street': street,
+      'suite': suite,
+      'city': city,
+      'zipcode': zipcode,
+    };
+  }
+}
+ 
 class DosenModel {
-  final String id;
+  final int id;
   final String name;
-  final String nip;
+  final String username;
   final String email;
-  final String department;
-  final String initials;
-  final int colorIndex;
-
+  final AddressModel address;
+ 
   DosenModel({
     required this.id,
     required this.name,
-    required this.nip,
+    required this.username,
     required this.email,
-    required this.department,
-    required this.initials,
-    required this.colorIndex,
+    required this.address,
   });
-
+ 
   factory DosenModel.fromJson(Map<String, dynamic> json) {
     return DosenModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      nip: json['nip'] as String,
-      email: json['email'] as String,
-      department: json['department'] as String,
-      initials: json['initials'] as String,
-      colorIndex: json['colorIndex'] as int? ?? 0,
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      username: json['username'] ?? '',
+      email: json['email'] ?? '',
+      address: AddressModel.fromJson(json['address'] ?? {}),
     );
   }
-
+ 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
-      'nip': nip,
+      'username': username,
       'email': email,
-      'department': department,
-      'initials': initials,
-      'colorIndex': colorIndex,
+      'address': address.toJson(),
     };
   }
 }
